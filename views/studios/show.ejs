@@ -1,0 +1,119 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/stylesheets/stars.css">
+<div class="row">
+    <div class="col-6">
+        <div id="studioCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+            <!--Schleife für das Array von Fotos 
+            und es sollen alle Fotos angezeigt werden die hochgeladen wurden
+            ...die Images sind unter dem Modell studio unter images.url gespeichert-->
+            <% studio.images.forEach((img, i) => { %>
+                <!-- Wenn der Index von Item 0 ist, also die aktuelle, dann gib dem Bild die active Klasse damit man das Bild sieht--> 
+              <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
+                <img class="d-block w-100" src="<%= img.url %>" alt="">
+              </div>
+            <% }) %> 
+            </div>
+            <% if(studio.images.length > 1) { %> 
+            <button class="carousel-control-prev" type="button" data-bs-target="#studioCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#studioCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+              <% } %> 
+            </div>
+        <div class="card mb-3 ">
+            <div class="card-body">
+              <h5 class="card-title"><%= studio.title %></h5>
+              <p class="card-text"><%= studio.offer %></p>
+              <p class="card-text"><%= studio.description %></p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><%= studio.street %> <%= studio.streetNumber %> </li>
+              <li class="list-group-item text-muted"><%= studio.zipcode %> <%= studio.location %></li>
+              <li class="list-group-item">Erstellt von: <%= studio.author.username %></li>
+              <li class="list-group-item">€ <%= studio.price %> pro Stunde</li>
+            </ul>
+            <% if(currentUser && studio.author.equals(currentUser._id)) { %> 
+            <div class="card-body">
+                <a href="/studios/<%=studio._id%>/edit" class="card-link btn btn-secondary">Edit</a>
+                <form class="d-inline" action="/studios/<%=studio._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>    
+            </div>
+            <% } %> 
+        </div> 
+    </div>
+    <div class="col-6">
+        <div id='map'></div>
+        <% if(currentUser){ %>
+            <h4>Lass uns eine Bewertung da</h4>
+            <form action="/studios/<%=studio._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
+                <div class="mb-3">
+                    <fieldset class="starability-basic">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="body">Text</label>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                    <div class="valid-feedback">
+                        Sieht gut aus!
+                    </div>
+                    <div class="invalid-feedback">
+                        Bitte ein Review eintragen.
+                    </div>
+                </div>
+                <button class="btn btn-success">Submit</button>
+            </form>    
+        <% } %>
+        <% for (let review of studio.reviews) { %>
+            <% let numberReview = studio.reviews.indexOf(review) %>
+            <% numberReview+=1; %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Review: <%=numberReview%></h2>
+                    <p class="card-text">Bewertung Studio:</p>
+                    <p class="starability-result" data-rating="<%=review.rating%>">
+                      Rated: <%=review.rating%> stars
+                    </p>    
+                    <h6 class="card-subtitle mb--2 text-muted">Von: <%=review.author.username%> </h6>
+                    <p class="card-text">Review Text: <%=review.body%></p>
+                </div> 
+                <% if(currentUser && review.author.equals(currentUser._id)) { %>  
+                    <form action="/studios/<%=studio._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST" class="mb-3">
+                        <button class="btn btn-sm btn-danger">Delete</button>      
+                    </form>
+                <% } %>
+            </div>
+        <% } %>      
+    
+</div>
+
+<footer>
+    <a href="/studios">All Studios</a>
+</footer>
+
+<!-- Um den Token für das Script in Public öffentlich zu machen, brauchen wir von EJS den Public Token über die env Variabel
+das geht nur über ein ejs, denn showPageMap.js nimmmt keine EJS Befehle-->
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const studio =<%- JSON.stringify(studio ) %>
+</script>
+
+
+<script src="/javascripts/showPageMap.js"></script>

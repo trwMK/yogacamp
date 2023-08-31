@@ -1,0 +1,56 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+    <h1 class="text-center">Neues Studio</h1>
+    <div class="col-md-6 offset-md-3">
+        <form class="validated-form" action="/studios" method="POST" novalidate enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="title">Name</label>
+                <input class="form-control" type="text" id="title" name="studio[title]" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="street">Straße</label>
+                <input class="form-control" type="text" id="street" name="studio[street]" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="streetNumber">Hausnummer</label>
+                <input class="form-control" type="number" id="streetNumber" name="studio[streetNumber]" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="ziopcode">PLZ</label>
+                <input class="form-control" type="number" id="zipcode" name="studio[zipcode]" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Stadt</label>
+                <input class="form-control" type="text" id="location" name="studio[location]" required>
+            </div>
+            <div class="input-group">
+                <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputImages" aria-label="Upload" name="image" multiple>
+                <button class="btn btn-outline-secondary" type="button" id="inputImages">Hochladen</button>
+            </div>
+            <!--             <div class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="studio[image]" required>
+            </div>
+-->            <div class="mb-3">
+                <label class="form-label" for="price">Preis</label>
+                <div class="input-group">
+                    <span id="price-label" class="input-group-text">€</span>
+                    <input type="text" class="form-control" placeholder="0.00" id="price" name="studio[price]" aria-label="price" aria-describedby="price-label" required>
+                </div>    
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="offer">Angebot</label>
+                <textarea class="form-control" type="text" id="offer" name="studio[offer]"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Beschreibung</label>
+                <textarea class="form-control" type="text" id="description" name="studio[description]" required></textarea>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success">Adde Studio</button>
+            </div>
+        </form>
+        <a class="btn btn-outline-secondary my-3" href="/">Zurück zu allen Studios</a>    
+    </div>
+</div>
+

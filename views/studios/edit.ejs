@@ -1,0 +1,63 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <h1 class="text-center">Edit Studio</h1>
+        <div class="col-md-6 offset-md-3">
+            <form action="/studios/<%=studio._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Name</label>
+                    <input class="form-control" type="text" id="title" name="studio[title]" value="<%= studio.title %>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="street">Street</label>
+                    <input class="form-control" type="text" id="street" name="studio[street]" value="<%= studio.street %>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="streetNumber">Street number</label>
+                    <input class="form-control" type="number" id="streetNumber" name="studio[streetNumber]" value="<%= studio.streetNumber %>" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ziopcode">Zipcode</label>
+                    <input class="form-control" type="number" id="zipcode" name="studio[zipcode]" value="<%= studio.zipcode %>" required>
+                </div>    
+                <div class="mb-3">
+                    <label class="form-label" for="location">Location</label>
+                    <input class="form-control" type="text" id="location" name="studio[location]" value="<%= studio.location %>" required>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputImages" aria-label="Upload" name="image" multiple>
+                        <button class="btn btn-outline-secondary" type="button" id="inputImages">Hochladen</button>
+                      </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="price">Yogastudio Price</label>
+                    <div class="input-group">
+                        <span id="price-label" class="input-group-text">€</span>
+                        <input type="text" class="form-control" placeholder="0.00" id="price" name="studio[price]" aria-label="price" aria-describedby="price-label" value="<%= studio.price %>" required>
+                    </div>    
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="offer">Offer</label>
+                    <textarea class="form-control" type="text" id="offer" name="studio[offer]"><%= studio.offer %></textarea>
+                </div>    
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" type="text" id="description" name="studio[description]"  required><%= studio.description %></textarea>
+                </div>
+                <div class="mb-3">
+                    <% studio.images.forEach(function(img, index) { %>
+                        <!--img.thumbnail ist die neue Property vom virtuellen ELement aus dem Model Schema-->
+                        <img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">
+                        <div class="form-check-inline">
+                            <input type="checkbox" name="deleteImages[]" id="bild-<%=index%>" value="<%=img.filename%>">
+                        </div>
+                        <label for="bild-<%=index%>">Löschen?</label>
+                    <% }) %> 
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-success">Update Studio</button>
+                </div>
+            </form>
+            <a href="/studios/<%= studio._id%>">Back to the studio</a>    
+        </div>
+    </div>

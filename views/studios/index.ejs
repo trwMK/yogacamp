@@ -1,0 +1,46 @@
+<% layout('layouts/boilerplate') %>
+    <div id="cluster-map"></div>
+    <h1>All Studios</h1>
+    <div class="">
+        <a class="btn btn-primary" href="/studios/new">Add New</a>
+    </div>
+    <% for(let studio of studios) {%>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <%if(studio.images.length) { %>
+                    <!--Zeige das erste Bild aus dem Array-->
+                    <img class="img-fluid" alt="" src="<%= studio.images[0].url %>">
+                    <% } else { %>
+                        <img class="img-fluid" alt="" src="https://res.cloudinary.com/dd6ahivgd/image/upload/v1660396416/Studios/nvv5mysgovbukxaxlnei.jpg">
+                    <% } %> 
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= studio.title %></h5>
+                        <p class="card-text"><%= studio.description %></p>
+                        <p class="card-text">
+                            <small class="text-muted"><%= studio.location %></small>
+                        </p>
+                        <a class="btn btn-primary" href="/studios/<%= studio._id %>">View <%= studio.title %></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% }%>
+
+
+<!-- Um den Token für das Script in Public öffentlich zu machen, brauchen wir von EJS den Public Token über die env Variabel
+das geht nur über ein ejs, denn showPageMap.js nimmmt keine EJS Befehle-->
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    //mit der Variabeln holen wir uns alle Studios aus studios von der for Schleife
+    //weil mapbox für clusterMaps ein Objekt Fetaures mit dem Array an Daten erwartet und wir nur ein Array in der Datenbank haben,
+    //können wir hier mit den geschweiften Klammern studios zu einem Objekt mit der Varibael feature machen und das Array von unseren Stuidos
+    //in das Objekt Features packen
+    //wie bei den Beispiel Daten vom Earthquake
+    //https://docs.mapbox.com/mapbox-gl-js/example/cluster/
+    const studios = {features: <%- JSON.stringify(studios) %>}
+</script>
+
+<script src="/javascripts/clusterMap.js"></script>  
